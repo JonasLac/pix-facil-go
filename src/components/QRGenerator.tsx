@@ -19,65 +19,79 @@ const QRGenerator = ({ selectedKey, onBack }: QRGeneratorProps) => {
   const [qrCode, setQrCode] = useState<string | null>(null);
 
   const generateBRCode = (pixKey: PixKey, amount: string, description: string) => {
-    // Payload Format Indicator
-    const formatIndicator = "000201";
+    // Payload Format Indicator (ID 00)
+    const payloadFormatIndicator = "000201";
     
-    // Point of Initiation Method
-    const pointOfInitiation = "010212";
+    // Point of Initiation Method (ID 01) - opcional para pagamento único
+    const pointOfInitiation = "010211";
     
-    // Merchant Account Information
-    const pixKeyFormatted = pixKey.value.replace(/[^a-zA-Z0-9@.\-]/g, '');
-    const merchantAccountInfo = `0014BR.GOV.BCB.PIX01${pixKeyFormatted.length.toString().padStart(2, '0')}${pixKeyFormatted}`;
-    const merchantField = `26${merchantAccountInfo.length.toString().padStart(2, '0')}${merchantAccountInfo}`;
+    // Merchant Account Information (ID 26)
+    const pixKeyValue = pixKey.value.trim();
+    const gui = "0014BR.GOV.BCB.PIX";
+    const keyField = `01${pixKeyValue.length.toString().padStart(2, '0')}${pixKeyValue}`;
+    const merchantAccountInfo = gui + keyField;
+    const merchantAccountField = `26${merchantAccountInfo.length.toString().padStart(2, '0')}${merchantAccountInfo}`;
     
-    // Merchant Category Code
+    // Merchant Category Code (ID 52)
     const merchantCategoryCode = "52040000";
     
-    // Transaction Currency (986 = BRL)
+    // Transaction Currency (ID 53) - 986 = BRL
     const transactionCurrency = "5303986";
     
-    // Transaction Amount
+    // Transaction Amount (ID 54) - apenas se valor for informado
     let transactionAmount = "";
     if (amount && parseFloat(amount) > 0) {
-      const amountFormatted = parseFloat(amount).toFixed(2);
-      transactionAmount = `54${amountFormatted.length.toString().padStart(2, '0')}${amountFormatted}`;
+      const amountValue = parseFloat(amount).toFixed(2);
+      transactionAmount = `54${amountValue.length.toString().padStart(2, '0')}${amountValue}`;
     }
     
-    // Country Code
+    // Country Code (ID 58)
     const countryCode = "5802BR";
     
-    // Merchant Name (usando o label da chave)
-    const merchantName = selectedKey.label.substring(0, 25);
+    // Merchant Name (ID 59)
+    const merchantName = pixKey.label.substring(0, 25);
     const merchantNameField = `59${merchantName.length.toString().padStart(2, '0')}${merchantName}`;
     
-    // Merchant City
+    // Merchant City (ID 60)
     const merchantCity = "6009SAO PAULO";
     
-    // Additional Data Field Template
+    // Additional Data Field Template (ID 62)
     let additionalDataField = "";
     if (description && description.trim()) {
-      const descriptionTrimmed = description.trim().substring(0, 99);
-      const txidField = `05${descriptionTrimmed.length.toString().padStart(2, '0')}${descriptionTrimmed}`;
-      additionalDataField = `62${(txidField.length).toString().padStart(2, '0')}${txidField}`;
+      const desc = description.trim().substring(0, 99);
+      const txidField = `05${desc.length.toString().padStart(2, '0')}${desc}`;
+      additionalDataField = `62${txidField.length.toString().padStart(2, '0')}${txidField}`;
     } else {
-      additionalDataField = "6204";
+      // Campo obrigatório mesmo que vazio
+      additionalDataField = "6204***";
     }
     
-    // Concatenar todos os campos
-    const payload = formatIndicator + pointOfInitiation + merchantField + merchantCategoryCode + 
-                   transactionCurrency + transactionAmount + countryCode + merchantNameField + 
-                   merchantCity + additionalDataField + "6304";
+    // CRC16 Placeholder (ID 63)
+    const crcPlaceholder = "6304";
+    
+    // Montar payload sem CRC
+    const payloadWithoutCrc = payloadFormatIndicator + 
+                             pointOfInitiation + 
+                             merchantAccountField + 
+                             merchantCategoryCode + 
+                             transactionCurrency + 
+                             transactionAmount + 
+                             countryCode + 
+                             merchantNameField + 
+                             merchantCity + 
+                             additionalDataField + 
+                             crcPlaceholder;
     
     // Calcular CRC16
-    const crc16 = calculateCRC16(payload);
-    const finalPayload = payload + crc16;
+    const crc16 = calculateCRC16(payloadWithoutCrc);
+    const finalPayload = payloadWithoutCrc + crc16;
     
     return finalPayload;
   };
 
   const calculateCRC16 = (data: string) => {
-    const polynomial = 0x1021;
     let crc = 0xFFFF;
+    const polynomial = 0x1021;
     
     for (let i = 0; i < data.length; i++) {
       crc ^= (data.charCodeAt(i) << 8);
@@ -106,6 +120,7 @@ const QRGenerator = ({ selectedKey, onBack }: QRGeneratorProps) => {
 
     const brCode = generateBRCode(selectedKey, amount, description);
     console.log("BR Code gerado:", brCode);
+    console.log("Tamanho do BR Code:", brCode.length);
     
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(brCode)}`;
     
