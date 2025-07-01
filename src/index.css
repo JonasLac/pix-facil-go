@@ -47,6 +47,10 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom Pix colors */
+    --pix-green: 142 76% 36%;
+    --pix-green-light: 142 60% 85%;
   }
 
   .dark {
@@ -108,4 +112,16 @@ All colors MUST be HSL.
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.pix-green {
+  color: hsl(var(--pix-green));
+}
+
+.ring-pix-green {
+  --tw-ring-color: hsl(var(--pix-green));
+}
+
+.bg-pix-gradient-light {
+  background: linear-gradient(135deg, hsl(var(--pix-green-light)) 0%, rgba(0, 102, 204, 0.1) 100%);
 }

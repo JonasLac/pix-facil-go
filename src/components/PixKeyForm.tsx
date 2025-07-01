@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 
 export interface PixKey {
@@ -12,6 +13,7 @@ export interface PixKey {
   type: string;
   value: string;
   label: string;
+  isPrimary?: boolean;
   createdAt: string;
 }
 
@@ -24,6 +26,7 @@ const PixKeyForm = ({ onSave, onCancel }: PixKeyFormProps) => {
   const [type, setType] = useState("");
   const [value, setValue] = useState("");
   const [label, setLabel] = useState("");
+  const [isPrimary, setIsPrimary] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +68,7 @@ const PixKeyForm = ({ onSave, onCancel }: PixKeyFormProps) => {
       return;
     }
 
-    onSave({ type, value, label });
+    onSave({ type, value, label, isPrimary });
     toast({
       title: "Sucesso!",
       description: "Chave Pix cadastrada com sucesso",
@@ -132,6 +135,17 @@ const PixKeyForm = ({ onSave, onCancel }: PixKeyFormProps) => {
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Ex: Conta Principal, Trabalho, etc."
             />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="isPrimary" 
+              checked={isPrimary}
+              onCheckedChange={(checked) => setIsPrimary(checked as boolean)}
+            />
+            <Label htmlFor="isPrimary" className="text-sm font-medium">
+              Definir como chave principal
+            </Label>
           </div>
 
           <div className="flex space-x-3 pt-4">

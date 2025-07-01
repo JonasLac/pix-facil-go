@@ -5,6 +5,7 @@ import StatsCard from "@/components/StatsCard";
 import PixKeyForm, { PixKey } from "@/components/PixKeyForm";
 import PixKeyList from "@/components/PixKeyList";
 import QRGenerator from "@/components/QRGenerator";
+import PrimaryKeyCard from "@/components/PrimaryKeyCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { QrCode, Share, User } from "lucide-react";
@@ -29,13 +30,19 @@ const Index = () => {
   }, [pixKeys]);
 
   const handleSavePixKey = (newKey: Omit<PixKey, 'id' | 'createdAt'>) => {
+    // Se a nova chave for marcada como principal, remover a flag das outras
+    let updatedKeys = pixKeys;
+    if (newKey.isPrimary) {
+      updatedKeys = pixKeys.map(key => ({ ...key, isPrimary: false }));
+    }
+
     const pixKey: PixKey = {
       ...newKey,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
     };
     
-    setPixKeys(prev => [...prev, pixKey]);
+    setPixKeys([...updatedKeys, pixKey]);
     setCurrentView("keys");
   };
 
@@ -47,10 +54,23 @@ const Index = () => {
     });
   };
 
+  const handleSetPrimary = (id: string) => {
+    setPixKeys(prev => prev.map(key => ({
+      ...key,
+      isPrimary: key.id === id
+    })));
+    toast({
+      title: "Chave principal definida",
+      description: "A chave foi definida como principal com sucesso",
+    });
+  };
+
   const handleGenerateQR = (key: PixKey) => {
     setSelectedKey(key);
     setCurrentView("generate-qr");
   };
+
+  const primaryKey = pixKeys.find(key => key.isPrimary);
 
   const renderCurrentView = () => {
     switch (currentView) {
@@ -78,6 +98,7 @@ const Index = () => {
               keys={pixKeys}
               onDeleteKey={handleDeleteKey}
               onGenerateQR={handleGenerateQR}
+              onSetPrimary={handleSetPrimary}
             />
           </div>
         );
@@ -104,6 +125,13 @@ const Index = () => {
                 Simplifique seus pagamentos Pix: cadastre suas chaves, gere QR Codes e receba pagamentos em segundos.
               </p>
             </div>
+
+            {primaryKey && (
+              <PrimaryKeyCard 
+                primaryKey={primaryKey}
+                onGenerateQR={handleGenerateQR}
+              />
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <StatsCard

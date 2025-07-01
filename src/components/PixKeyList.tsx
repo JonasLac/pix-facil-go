@@ -3,16 +3,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Share, QrCode } from "lucide-react";
+import { Share, QrCode, Star } from "lucide-react";
 import { PixKey } from "./PixKeyForm";
 
 interface PixKeyListProps {
   keys: PixKey[];
   onDeleteKey: (id: string) => void;
   onGenerateQR: (key: PixKey) => void;
+  onSetPrimary: (id: string) => void;
 }
 
-const PixKeyList = ({ keys, onDeleteKey, onGenerateQR }: PixKeyListProps) => {
+const PixKeyList = ({ keys, onDeleteKey, onGenerateQR, onSetPrimary }: PixKeyListProps) => {
   const getTypeLabel = (type: string) => {
     const labels: { [key: string]: string } = {
       cpf: "CPF",
@@ -63,7 +64,7 @@ const PixKeyList = ({ keys, onDeleteKey, onGenerateQR }: PixKeyListProps) => {
   return (
     <div className="space-y-4">
       {keys.map((key) => (
-        <Card key={key.id} className="animate-fade-in hover:shadow-md transition-shadow">
+        <Card key={key.id} className={`animate-fade-in hover:shadow-md transition-shadow ${key.isPrimary ? 'ring-2 ring-pix-green' : ''}`}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -72,6 +73,12 @@ const PixKeyList = ({ keys, onDeleteKey, onGenerateQR }: PixKeyListProps) => {
                     {getTypeLabel(key.type)}
                   </Badge>
                   <span className="font-medium text-gray-900">{key.label}</span>
+                  {key.isPrimary && (
+                    <Badge className="bg-yellow-100 text-yellow-800">
+                      <Star className="w-3 h-3 mr-1" />
+                      Principal
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-sm text-gray-600 font-mono">
                   {maskValue(key.type, key.value)}
@@ -90,6 +97,16 @@ const PixKeyList = ({ keys, onDeleteKey, onGenerateQR }: PixKeyListProps) => {
                   <QrCode className="w-4 h-4 mr-1" />
                   Gerar QR
                 </Button>
+                {!key.isPrimary && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => onSetPrimary(key.id)}
+                  >
+                    <Star className="w-4 h-4 mr-1" />
+                    Principal
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   variant="outline"

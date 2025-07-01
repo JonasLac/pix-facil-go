@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,40 @@ const QRGenerator = ({ selectedKey, onBack }: QRGeneratorProps) => {
   const [description, setDescription] = useState("");
   const [qrCode, setQrCode] = useState<string | null>(null);
 
+  const generateBRCode = (pixKey: PixKey, amount: string, description: string) => {
+    // Gerar BR Code padrão do PIX
+    const merchantAccountInfo = `0014BR.GOV.BCB.PIX01${pixKey.value.length.toString().padStart(2, '0')}${pixKey.value}`;
+    const transactionAmount = amount ? `54${amount.length.toString().padStart(2, '0')}${amount}` : '';
+    const additionalInfo = description ? `62${(description.length + 4).toString().padStart(2, '0')}05${description.length.toString().padStart(2, '0')}${description}` : '6204';
+    
+    const payload = `00020126${merchantAccountInfo.length.toString().padStart(2, '0')}${merchantAccountInfo}5204000053039865${transactionAmount}5802BR5909PIX FACIL6009SAO PAULO${additionalInfo}`;
+    
+    // Calcular CRC16
+    const crc16 = calculateCRC16(payload + '6304');
+    const finalPayload = payload + '6304' + crc16;
+    
+    return finalPayload;
+  };
+
+  const calculateCRC16 = (data: string) => {
+    let crc = 0xFFFF;
+    const bytes = new TextEncoder().encode(data);
+    
+    for (let i = 0; i < bytes.length; i++) {
+      crc ^= bytes[i] << 8;
+      for (let j = 0; j < 8; j++) {
+        if (crc & 0x8000) {
+          crc = (crc << 1) ^ 0x1021;
+        } else {
+          crc = crc << 1;
+        }
+        crc &= 0xFFFF;
+      }
+    }
+    
+    return crc.toString(16).toUpperCase().padStart(4, '0');
+  };
+
   const generateQRCode = () => {
     if (!amount || parseFloat(amount) <= 0) {
       toast({
@@ -29,16 +62,14 @@ const QRGenerator = ({ selectedKey, onBack }: QRGeneratorProps) => {
       return;
     }
 
-    // Simulação da geração do QR Code BR Code
-    // Em uma implementação real, você integraria com uma API de geração de PIX BR Code
-    const qrData = `00020126${selectedKey.type}${selectedKey.value}${amount}${description}`;
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
+    const brCode = generateBRCode(selectedKey, amount, description);
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(brCode)}`;
     
     setQrCode(qrCodeUrl);
     
     toast({
       title: "QR Code gerado!",
-      description: "Seu QR Code está pronto para compartilhamento",
+      description: "Seu QR Code está pronto para pagamento",
     });
   };
 
