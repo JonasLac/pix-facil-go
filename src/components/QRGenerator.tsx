@@ -19,33 +19,75 @@ const QRGenerator = ({ selectedKey, onBack }: QRGeneratorProps) => {
   const [qrCode, setQrCode] = useState<string | null>(null);
 
   const generateBRCode = (pixKey: PixKey, amount: string, description: string) => {
-    // Gerar BR Code padrão do PIX
-    const merchantAccountInfo = `0014BR.GOV.BCB.PIX01${pixKey.value.length.toString().padStart(2, '0')}${pixKey.value}`;
-    const transactionAmount = amount ? `54${amount.length.toString().padStart(2, '0')}${amount}` : '';
-    const additionalInfo = description ? `62${(description.length + 4).toString().padStart(2, '0')}05${description.length.toString().padStart(2, '0')}${description}` : '6204';
+    // Payload Format Indicator
+    const formatIndicator = "000201";
     
-    const payload = `00020126${merchantAccountInfo.length.toString().padStart(2, '0')}${merchantAccountInfo}5204000053039865${transactionAmount}5802BR5909PIX FACIL6009SAO PAULO${additionalInfo}`;
+    // Point of Initiation Method
+    const pointOfInitiation = "010212";
+    
+    // Merchant Account Information
+    const pixKeyFormatted = pixKey.value.replace(/[^a-zA-Z0-9@.\-]/g, '');
+    const merchantAccountInfo = `0014BR.GOV.BCB.PIX01${pixKeyFormatted.length.toString().padStart(2, '0')}${pixKeyFormatted}`;
+    const merchantField = `26${merchantAccountInfo.length.toString().padStart(2, '0')}${merchantAccountInfo}`;
+    
+    // Merchant Category Code
+    const merchantCategoryCode = "52040000";
+    
+    // Transaction Currency (986 = BRL)
+    const transactionCurrency = "5303986";
+    
+    // Transaction Amount
+    let transactionAmount = "";
+    if (amount && parseFloat(amount) > 0) {
+      const amountFormatted = parseFloat(amount).toFixed(2);
+      transactionAmount = `54${amountFormatted.length.toString().padStart(2, '0')}${amountFormatted}`;
+    }
+    
+    // Country Code
+    const countryCode = "5802BR";
+    
+    // Merchant Name (usando o label da chave)
+    const merchantName = selectedKey.label.substring(0, 25);
+    const merchantNameField = `59${merchantName.length.toString().padStart(2, '0')}${merchantName}`;
+    
+    // Merchant City
+    const merchantCity = "6009SAO PAULO";
+    
+    // Additional Data Field Template
+    let additionalDataField = "";
+    if (description && description.trim()) {
+      const descriptionTrimmed = description.trim().substring(0, 99);
+      const txidField = `05${descriptionTrimmed.length.toString().padStart(2, '0')}${descriptionTrimmed}`;
+      additionalDataField = `62${(txidField.length).toString().padStart(2, '0')}${txidField}`;
+    } else {
+      additionalDataField = "6204";
+    }
+    
+    // Concatenar todos os campos
+    const payload = formatIndicator + pointOfInitiation + merchantField + merchantCategoryCode + 
+                   transactionCurrency + transactionAmount + countryCode + merchantNameField + 
+                   merchantCity + additionalDataField + "6304";
     
     // Calcular CRC16
-    const crc16 = calculateCRC16(payload + '6304');
-    const finalPayload = payload + '6304' + crc16;
+    const crc16 = calculateCRC16(payload);
+    const finalPayload = payload + crc16;
     
     return finalPayload;
   };
 
   const calculateCRC16 = (data: string) => {
+    const polynomial = 0x1021;
     let crc = 0xFFFF;
-    const bytes = new TextEncoder().encode(data);
     
-    for (let i = 0; i < bytes.length; i++) {
-      crc ^= bytes[i] << 8;
+    for (let i = 0; i < data.length; i++) {
+      crc ^= (data.charCodeAt(i) << 8);
+      
       for (let j = 0; j < 8; j++) {
-        if (crc & 0x8000) {
-          crc = (crc << 1) ^ 0x1021;
+        if ((crc & 0x8000) !== 0) {
+          crc = ((crc << 1) ^ polynomial) & 0xFFFF;
         } else {
-          crc = crc << 1;
+          crc = (crc << 1) & 0xFFFF;
         }
-        crc &= 0xFFFF;
       }
     }
     
@@ -63,6 +105,8 @@ const QRGenerator = ({ selectedKey, onBack }: QRGeneratorProps) => {
     }
 
     const brCode = generateBRCode(selectedKey, amount, description);
+    console.log("BR Code gerado:", brCode);
+    
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(brCode)}`;
     
     setQrCode(qrCodeUrl);
