@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services' // Add this line
 
 android {
     namespace "app.lovable.5e92cf3badcd48008728329f1546c895"
@@ -45,15 +44,11 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
-// The try-catch block you had is typically not needed when you apply the plugin directly.
-// The Google Services plugin will look for the google-services.json file automatically.
-/*
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
         apply plugin: 'com.google.gms.google-services'
     }
-} catch( e) {
+} catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
-*/
