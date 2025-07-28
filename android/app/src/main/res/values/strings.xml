@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pix Fácil</string>
+    <string name="title_activity_main">Pix Fácil</string>
+    <string name="package_name">app.lovable.5e92cf3badcd48008728329f1546c895</string>
+    <string name="custom_url_scheme">app.lovable.5e92cf3badcd48008728329f1546c895</string>
+</resources>
