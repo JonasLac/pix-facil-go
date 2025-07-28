@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "app.lovable.5e92cf3badcd48008728329f1546c895"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    namespace "app.lovable.pixfacilgo"
+    compileSdk 34
     defaultConfig {
-        applicationId "app.lovable.5e92cf3badcd48008728329f1546c895"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        applicationId "app.lovable.pixfacilgo"
+        minSdk 22
+        targetSdk 34
         versionCode 1
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

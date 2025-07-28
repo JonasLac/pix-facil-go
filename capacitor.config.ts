@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.5e92cf3badcd48008728329f1546c895',
+  appId: 'app.lovable.pixfacilgo',
   appName: 'pix-facil-go',
   webDir: 'dist',
   server: {
