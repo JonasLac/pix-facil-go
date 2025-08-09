@@ -4,7 +4,7 @@
             "outputFile": "app.lovable.pixfacilgo.app-mergeDebugResources-24:/values-v31/values-v31.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\jonas\\.gradle\\caches\\transforms-4\\611763a9a36b95a68309f763c22898b1\\transformed\\jetified-core-splashscreen-1.0.1\\res\\values-v31\\values-v31.xml",
+                    "source": "C:\\Users\\jonas\\.gradle\\caches\\8.13\\transforms\\52e8915459c8dafaae96dcaa67ac3428\\transformed\\jetified-core-splashscreen-1.0.1\\res\\values-v31\\values-v31.xml",
                     "from": {
                         "startLines": "2,9",
                         "startColumns": "4,4",

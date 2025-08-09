@@ -1,2 +1,0 @@
-app.lovable.pixfacilgo.test:style/WhiteBackgroundTheme = 0x7f010001
-app.lovable.pixfacilgo.test:style/WhiteBackgroundDialogTheme = 0x7f010000
