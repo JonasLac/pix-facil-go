@@ -13,7 +13,7 @@
         <activity
             android:exported="true"
             android:launchMode="singleTask"
-            android:name="app.lovable"
+            android:name="app.lovable.pixfacilgo.MainActivity"
             android:theme="@style/AppTheme.NoActionBarLaunch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
