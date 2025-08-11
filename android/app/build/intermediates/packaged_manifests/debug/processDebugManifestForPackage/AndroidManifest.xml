@@ -37,7 +37,7 @@
         android:theme="@style/AppTheme.NoActionBarLaunch"
         android:usesCleartextTraffic="true" >
         <activity
-            android:name="app.lovable"
+            android:name="app.lovable.pixfacilgo.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBarLaunch" >

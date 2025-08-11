@@ -63,8 +63,8 @@
 38-->C:\Users\jonas\AndroidStudioProjects\pix-facil-go\android\app\src\main\AndroidManifest.xml:11:9-44
 39        <activity
 39-->C:\Users\jonas\AndroidStudioProjects\pix-facil-go\android\app\src\main\AndroidManifest.xml:13:9-22:20
-40            android:name="app.lovable"
-40-->C:\Users\jonas\AndroidStudioProjects\pix-facil-go\android\app\src\main\AndroidManifest.xml:16:13-39
+40            android:name="app.lovable.pixfacilgo.MainActivity"
+40-->C:\Users\jonas\AndroidStudioProjects\pix-facil-go\android\app\src\main\AndroidManifest.xml:16:13-63
 41            android:exported="true"
 41-->C:\Users\jonas\AndroidStudioProjects\pix-facil-go\android\app\src\main\AndroidManifest.xml:14:13-36
 42            android:launchMode="singleTask"
