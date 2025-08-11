@@ -1,0 +1,10 @@
+#Fri Aug 08 21:36:12 BRT 2025
+base.2=C\:\\Users\\jonas\\AndroidStudioProjects\\pix-facil-go\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+path.2=0/classes.dex
+base.1=C\:\\Users\\jonas\\AndroidStudioProjects\\pix-facil-go\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
+path.1=0/classes.dex
+base.0=C\:\\Users\\jonas\\AndroidStudioProjects\\pix-facil-go\\android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+path.0=classes.dex
