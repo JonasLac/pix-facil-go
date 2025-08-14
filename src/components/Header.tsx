@@ -1,20 +1,13 @@
 
-import { useState } from "react";
-import { QrCode, Menu, X, Home, QrCodeIcon, Clock, Settings } from "lucide-react";
+import { QrCode, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const handleMenuClick = (path: string) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
+  const handleHomeClick = () => {
+    navigate('/');
   };
 
   return (
@@ -36,56 +29,12 @@ const Header = () => {
               variant="ghost" 
               size="icon" 
               className="md:hidden"
-              onClick={toggleMobileMenu}
+              onClick={handleHomeClick}
             >
-              {isMobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              <Home className="w-5 h-5" />
             </Button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
-            <div className="px-4 py-4 space-y-3">
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left gap-3"
-                onClick={() => handleMenuClick('/')}
-              >
-                <Home className="w-4 h-4" />
-                Início
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left gap-3"
-                onClick={() => handleMenuClick('/gerar-qr')}
-              >
-                <QrCodeIcon className="w-4 h-4" />
-                Gerar QR Code
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left gap-3"
-                onClick={() => handleMenuClick('/historico')}
-              >
-                <Clock className="w-4 h-4" />
-                Histórico
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start text-left gap-3"
-                onClick={() => handleMenuClick('/configuracoes')}
-              >
-                <Settings className="w-4 h-4" />
-                Configurações
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
     </header>
   );
