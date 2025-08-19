@@ -5,6 +5,7 @@ color colorPrimary
 color colorPrimaryDark
 drawable splash
 mipmap ic_launcher
+mipmap ic_launcher_app
 mipmap ic_launcher_round
 string app_name
 string custom_url_scheme

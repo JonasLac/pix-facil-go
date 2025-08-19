@@ -3,8 +3,8 @@
 	"appName": "pix-facil-go",
 	"webDir": "dist",
 	"server": {
-		"url": "https://5e92cf3b-adcd-4800-8728-329f1546c895.lovableproject.com?forceHideBadge=true\n",
-		"cleartext": true
+		"url": "https://5e92cf3b-adcd-4800-8728-329f1546c895.lovableproject.com?forceHideBadge=true",
+		"cleartext": false
 	},
 	"plugins": {
 		"SplashScreen": {
