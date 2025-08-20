@@ -3,8 +3,11 @@
 	"appName": "pix-facil-go",
 	"webDir": "dist",
 	"server": {
-		"url": "https://5e92cf3b-adcd-4800-8728-329f1546c895.lovableproject.com?forceHideBadge=true",
-		"cleartext": false
+		"url": "https://pix-facil-go-jonas-projects-6985bb9b.vercel.app",
+		"cleartext": false,
+		"allowNavigation": [
+			"pix-facil-go-jonas-projects-6985bb9b.vercel.app"
+		]
 	},
 	"plugins": {
 		"SplashScreen": {
