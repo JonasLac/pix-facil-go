@@ -3,7 +3,6 @@
 	"appName": "pix-facil-go",
 	"webDir": "dist",
 	"server": {
-		"url": "https://pix-facil-go-jonas-projects-6985bb9b.vercel.app",
 		"cleartext": false,
 		"allowNavigation": [
 			"pix-facil-go-jonas-projects-6985bb9b.vercel.app"
